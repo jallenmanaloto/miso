@@ -44,9 +44,13 @@ fn main() {
         },
         Commands::List => match commands::list() {
             Ok(labels) => {
-                println!("Saved passwords:");
-                for label in labels {
-                    println!("- {}", label);
+                if labels.is_empty() {
+                    println!("No saved passwords found");
+                } else {
+                    println!("Saved passwords:");
+                    for label in labels {
+                        println!("- {}", label);
+                    }
                 }
             }
             Err(_) => {
