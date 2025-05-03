@@ -17,6 +17,8 @@ pub enum Commands {
     },
     Get {
         label: String,
+        #[arg(short, long)]
+        copy: bool,
     },
     List,
     Delete {
