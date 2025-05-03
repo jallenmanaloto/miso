@@ -81,9 +81,6 @@ pub fn get(label: String) -> Result<String, Box<dyn std::error::Error>> {
 
 pub fn list() -> Result<Vec<String>, Box<dyn std::error::Error>> {
     let labels = load_labels()?;
-    if labels.is_empty() {
-        println!("No saved passwords found.");
-    }
     return Ok(labels);
 }
 
