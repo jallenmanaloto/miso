@@ -44,7 +44,7 @@ pub enum Commands {
     /// Search saved labels using a keyword
     Search {
         /// The keyword to search for
-        keyword: String,
+        query: String,
     },
 }
 
