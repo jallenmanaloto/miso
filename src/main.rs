@@ -61,5 +61,20 @@ fn main() {
                 println!("Failed to delete password for '{}'", label);
             }
         },
+        Commands::Search { query } => match commands::search(query.clone()) {
+            Ok(matches) => {
+                if matches.is_empty() {
+                    println!("No matches found for '{}'", &query)
+                } else {
+                    println!("Matches found:");
+                    for label in matches {
+                        println!("- {}", label);
+                    }
+                }
+            }
+            Err(_) => {
+                println!("Unexpected error occured when searching for '{}'", query);
+            }
+        },
     }
 }
