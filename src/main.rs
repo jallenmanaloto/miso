@@ -22,9 +22,26 @@ fn main() {
             Ok(()) => println!("Successfully created password for '{}'", label),
             Err(e) => eprintln!("Error: {}", e),
         },
-        Commands::Get { label } => {
-            commands::get(label);
-        }
+        Commands::Get { label, copy } => match commands::get(label.clone()) {
+            Ok(pass) => {
+                if copy {
+                    let mut clipboard = arboard::Clipboard::new().unwrap_or_else(|e| {
+                        eprintln!("Clipboard error: {}", e);
+                        std::process::exit(1);
+                    });
+                    clipboard.set_text(&pass).unwrap_or_else(|e| {
+                        eprintln!("Failed to copy to clipboard: {}", e);
+                        std::process::exit(1);
+                    });
+                    println!("Password for '{}' copied to clipboard", &label);
+                } else {
+                    println!("Password for '{}': {}", label, pass);
+                }
+            }
+            Err(_) => {
+                println!("No password found for '{}'", label)
+            }
+        },
         Commands::List => match commands::list() {
             Ok(labels) => {
                 println!("Saved passwords:");
