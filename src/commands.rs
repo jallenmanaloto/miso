@@ -9,20 +9,42 @@ use keyring::Entry;
 
 #[derive(Subcommand)]
 pub enum Commands {
+    /// Create a new password for the given label
     Create {
+        /// The label for this password (e.g., "github")
         label: String,
+
+        /// The password to save
         password: String,
+
+        /// Overwrite the password if it already exists
         #[arg(short, long)]
         force: bool,
     },
+
+    /// Retrieve the password for a given label
     Get {
+        /// The label to retrieve
         label: String,
+
+        /// Copy the password to clipboard
         #[arg(short, long)]
         copy: bool,
     },
+
+    /// List all saved password labels
     List,
+
+    /// Delete the password for a given label
     Delete {
+        /// The label to delete
         label: String,
+    },
+
+    /// Search saved labels using a keyword
+    Search {
+        /// The keyword to search for
+        keyword: String,
     },
 }
 
@@ -83,6 +105,16 @@ pub fn delete(label: String) -> Result<(), Box<dyn std::error::Error>> {
         }
     }
     Ok(())
+}
+
+pub fn search(query: String) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let labels = load_labels()?;
+    let matches: Vec<_> = labels
+        .into_iter()
+        .filter(|label| label.to_lowercase().contains(&query.to_lowercase()))
+        .collect();
+
+    Ok(matches)
 }
 
 fn labels_file() -> PathBuf {
